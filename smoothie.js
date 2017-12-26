@@ -262,12 +262,15 @@
    *   yMaxFormatter: function(max, precision) { // callback function that formats the max y value label
    *     return parseFloat(max).toFixed(precision);
    *   },
+   *   yHorizontalFormatter: function(max, precision) { // callback function that formats the max y value label
+   *     return parseFloat(max).toFixed(precision);
+   *   },
    *   maxDataSetLength: 2,
    *   interpolation: 'bezier'                   // one of 'bezier', 'linear', or 'step'
    *   timestampFormatter: null,                 // optional function to format time stamps for bottom of chart
    *                                             // you may use SmoothieChart.timeFormatter, or your own: function(date) { return ''; }
    *   scrollBackwards: false,                   // reverse the scroll direction of the chart
-   *   horizontalLines: [],                      // [ { value: 0, color: '#ffffff', lineWidth: 1 } ]
+   *   horizontalLines: [],                      // [ { value: 0, color: '#ffffff', lineWidth: 1, label: false, labelSameAxis: true } ]
    *   grid:
    *   {
    *     fillStyle: '#000000',                   // the background colour of the chart
@@ -338,6 +341,9 @@
     },
     yMaxFormatter: function(max, precision) {
       return parseFloat(max).toFixed(precision);
+    },
+    yHorizontalFormatter: function(yVal, precision) { // callback function that formats the horizontal line label
+      return parseFloat(yVal).toFixed(precision);
     },
     maxValueScale: 1,
     minValueScale: 1,
@@ -851,6 +857,18 @@
         context.lineTo(dimensions.width, hly);
         context.stroke();
         context.closePath();
+        if (line.label)
+        {
+          context.save();
+          yLabel=chartOptions.yHorizontalFormatter(line.value, chartOptions.labels.precision);
+          labelPos =
+           line.labelSameAxis
+             ? (chartOptions.scrollBackwards ? 0 : dimensions.width - context.measureText(yLabel).width - 2)
+             : (chartOptions.scrollBackwards ? dimensions.width - context.measureText(yLabel).width - 2 : 0);
+          context.fillStyle = chartOptions.labels.fillStyle;
+          context.fillText(yLabel, labelPos, hly);
+          context.restore();
+        }
       }
     }
 
