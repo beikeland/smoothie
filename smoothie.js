@@ -564,8 +564,8 @@
     this.mousePageY = evt.pageY;
 
     var el = this.getTooltipEl();
-    el.style.top = Math.round(this.mousePageY) + chartOptions.unit;
-    el.style.left = Math.round(this.mousePageX) + chartOptions.unit;
+    el.style.top = Math.round(this.mousePageY) + this.options.unit;
+    el.style.left = Math.round(this.mousePageX) + this.options.unit;
     this.updateTooltip();
   };
 
