@@ -255,6 +255,7 @@
    *   scaleSmoothing: 0.125,                    // controls the rate at which y-value zoom animation occurs
    *   millisPerPixel: 20,                       // sets the speed at which the chart pans by
    *   enableDpiScaling: true,                   // support rendering at different DPI depending on the device
+   *   unit: 'px', 'pt', or 'em' or ..
    *   yMinFormatter: function(min, precision) { // callback function that formats the min y value label
    *     return parseFloat(min).toFixed(precision);
    *   },
@@ -331,6 +332,7 @@
   SmoothieChart.defaultChartOptions = {
     millisPerPixel: 20,
     enableDpiScaling: true,
+    unit: 'px',
     yMinFormatter: function(min, precision) {
       return parseFloat(min).toFixed(precision);
     },
@@ -556,8 +558,8 @@
     this.mousePageY = evt.pageY;
 
     var el = this.getTooltipEl();
-    el.style.top = Math.round(this.mousePageY) + 'px';
-    el.style.left = Math.round(this.mousePageX) + 'px';
+    el.style.top = Math.round(this.mousePageY) + chartOptions.unit;
+    el.style.left = Math.round(this.mousePageX) + chartOptions.unit;
     this.updateTooltip();
   };
 
@@ -597,14 +599,14 @@
       if (!this.originalWidth || (Math.floor(this.originalWidth * dpr) !== width)) {
         this.originalWidth = width;
         this.canvas.setAttribute('width', (Math.floor(width * dpr)).toString());
-        this.canvas.style.width = width + 'px';
+        this.canvas.style.width = width + chartOptions.unit;
         this.canvas.getContext('2d').scale(dpr, dpr);
       }
 
       if (!this.originalHeight || (Math.floor(this.originalHeight * dpr) !== height)) {
         this.originalHeight = height;
         this.canvas.setAttribute('height', (Math.floor(height * dpr)).toString());
-        this.canvas.style.height = height + 'px';
+        this.canvas.style.height = height + chartOptions.unit;
         this.canvas.getContext('2d').scale(dpr, dpr);
       }
     }
@@ -773,7 +775,7 @@
 
     this.updateValueRange();
 
-    context.font = chartOptions.labels.fontSize + 'px ' + chartOptions.labels.fontFamily;
+    context.font = chartOptions.labels.fontSize + chartOptions.unit + ' ' + chartOptions.labels.fontFamily;
 
     // Save the state of the canvas context, any transformations applied in this method
     // will get removed from the stack at the end of this method when .restore() is called.
