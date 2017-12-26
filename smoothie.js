@@ -858,7 +858,10 @@
         if (line.label)
         {
           context.save();
-          yLabel=chartOptions.yHorizontalFormatter(line.value, chartOptions.labels.precision);
+          if (typeof line.label == 'string')
+            yLabel=line.label;
+          else
+            yLabel=chartOptions.yHorizontalFormatter(line.value, chartOptions.labels.precision);
           labelPos =
            line.labelSameAxis
              ? (chartOptions.scrollBackwards ? 0 : dimensions.width - context.measureText(yLabel).width - 2)
