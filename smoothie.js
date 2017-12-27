@@ -895,7 +895,7 @@
           seriesOptions = this.seriesSet[d].options,
           interpolation = chartOptions.interpolation;
       //keep chart wide interpolation setting if timeseries does not have its own.
-      if (interpolation in seriesOptions.interpolation != 'undefined')
+      if (seriesOptions.interpolation != 'undefined')
       {
         interpolation = seriesOptions.interpolation;
         console.log("settign interpolation : "+d+" to : "+seriesOptions.interpolation);
