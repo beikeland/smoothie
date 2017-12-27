@@ -613,14 +613,14 @@
       if (!this.originalWidth || (Math.floor(this.originalWidth * dpr) !== width)) {
         this.originalWidth = width;
         this.canvas.setAttribute('width', (Math.floor(width * dpr)).toString());
-        this.canvas.style.width = width + chartOptions.unit;
+        this.canvas.style.width = width + this.options.unit;
         this.canvas.getContext('2d').scale(dpr, dpr);
       }
 
       if (!this.originalHeight || (Math.floor(this.originalHeight * dpr) !== height)) {
         this.originalHeight = height;
         this.canvas.setAttribute('height', (Math.floor(height * dpr)).toString());
-        this.canvas.style.height = height + chartOptions.unit;
+        this.canvas.style.height = height + this.options.unit;
         this.canvas.getContext('2d').scale(dpr, dpr);
       }
     }
