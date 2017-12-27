@@ -988,7 +988,10 @@
           maxLabelPos = chartOptions.scrollBackwards ? 0 : dimensions.width - context.measureText(maxValueString).width - 2,
           minLabelPos = chartOptions.scrollBackwards ? 0 : dimensions.width - context.measureText(minValueString).width - 2;
       context.fillStyle = chartOptions.labels.fillStyle;
-      context.fillText(maxValueString, maxLabelPos, chartOptions.labels.fontSize);
+      topPos = chartOptions.labels.fontSize;
+      if (chartOptions.unit == 'em')
+        topPos *= context.measureText("M").width;
+      context.fillText(maxValueString, maxLabelPos, topPos );
       context.fillText(minValueString, minLabelPos, dimensions.height - 2);
     }
 
