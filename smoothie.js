@@ -892,8 +892,14 @@
       }
       
       var dataSet = timeSeries.data,
-          seriesOptions = this.seriesSet[d].options;
-
+          seriesOptions = this.seriesSet[d].options,
+          interpolation = chartOptions.interpolation;
+      //keep chart wide interpolation setting if timeseries does not have its own.
+      if (interpolation in seriesOptions.interpolation != 'undefined')
+      {
+        interpolation = seriesOptions.interpolation;
+        console.log("settign interpolation : "+d+" to : "+seriesOptions.interpolation);
+      }
       // Delete old data that's moved off the left of the chart.
       timeSeries.dropOldData(oldestValidTime, chartOptions.maxDataSetLength);
 
@@ -912,7 +918,7 @@
           firstX = x;
           context.moveTo(x, y);
         } else {
-          switch (chartOptions.interpolation) {
+          switch (interpolation) {
             case "linear":
             case "line": {
               context.lineTo(x,y);
