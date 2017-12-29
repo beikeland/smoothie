@@ -61,8 +61,23 @@
           {color:'#880000', lineWidth: 2, value: Math.round(maxYValue/3)},
           {color:'#880000', lineWidth: 2, value: Math.round(-maxYValue/3)}
       ];
+      var sampleHorizontalLabelsEnabled=false;
+      var sampleHorizontalWithLabels = [
+          {color:'#ffffff', lineWidth: 1, value: 0, label: 'Zero'},
+          {color:'#880000', lineWidth: 2, value: Math.round(maxYValue/3), label: true},
+          {color:'#880000', lineWidth: 2, value: Math.round(-maxYValue/3), label: true}
+      ];
+      var sampleHorizontalWithoutLabels = [
+          {color:'#ffffff', lineWidth: 1, value: 0, label: 'Zero'},
+          {color:'#880000', lineWidth: 2, value: Math.round(maxYValue/3), label: true},
+          {color:'#880000', lineWidth: 2, value: Math.round(-maxYValue/3), label: true}
+      ];
 
       var updateCode = function(canvas, chart) {
+        if (!sampleHorizontalLabelsEnabled)
+          sampleHorizontalLines=sampleHorizontalWithoutLabels;
+        else
+          sampleHorizontalLines=sampleHorizontalWithLabels;
         document.getElementById('html-code').textContent = '<canvas id="smoothie-chart" width="' + canvas.width + '" height="' + canvas.height + '">';
 
         var chartOptions = difference(chart.options, SmoothieChart.defaultChartOptions);
@@ -85,7 +100,7 @@
           js += "  return {min: min, max: max};\n";
           js += "}\n\n";
         }
-
+  
         if (chart.options.horizontalLines && chart.options.horizontalLines.length) {
           chartOptions.horizontalLines = chart.options.horizontalLines;
         }
@@ -509,6 +524,10 @@
           convertBack: function (value) {
             return value && !!value.length;
           }
+        });
+        bindCheckBox({
+          target: sampleHorizontalLabelsEnabled,
+          name: 'Show y-value lines labels',
         });
       }
 
