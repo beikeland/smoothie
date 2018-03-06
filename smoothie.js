@@ -81,6 +81,12 @@
  * v1.32: Support frame rate limit, by @dpuyosa
  * v1.33: Use Date static method instead of instance, by @nnnoel
  *        Fix bug with tooltips when multiple charts on a page, by @jpmbiz70
+ * v1.34: Add disabled option to TimeSeries, by @TechGuard (#91)
+ *        Add nonRealtimeData option, by @annazhelt (#92, #93)
+ *        Add showIntermediateLabels option, by @annazhelt (#94)
+ *        Add displayDataFromPercentile option, by @annazhelt (#95)
+ *        Fix bug when hiding tooltip element, by @ralphwetzel (#96)
+ *        Support intermediate y-axis labels, by @beikeland (#99)
  */
 
 ;(function(exports) {
@@ -303,9 +309,9 @@
    *   nonRealtimeData: false,                   // use time of latest data as current time
    *   displayDataFromPercentile: 1,             // display not latest data, but data from the given percentile
    *                                             // useful when trying to see old data saved by setting a high value for maxDataSetLength
-   *                                             // should be a value between 0 and 1 
+   *                                             // should be a value between 0 and 1
    *   responsive: false,                        // whether the chart should adapt to the size of the canvas
-   *   limitFPS: 0                         // maximum frame rate the chart will render at, in FPS (zero means no limit)
+   *   limitFPS: 0                               // maximum frame rate the chart will render at, in FPS (zero means no limit)
    * }
    * </pre>
    *
@@ -548,7 +554,7 @@
       if (timeSeries.disabled) {
           continue;
       }
-      
+
       // find datapoint closest to time 't'
       var closeIdx = Util.binarySearch(timeSeries.data, t);
       if (closeIdx > 0 && closeIdx < timeSeries.data.length) {
@@ -580,8 +586,8 @@
   SmoothieChart.prototype.mouseout = function () {
     this.mouseover = false;
     this.mouseX = this.mouseY = -1;
-    if (SmoothieChart.tooltipEl)
-      SmoothieChart.tooltipEl.style.display = 'none';
+    if (this.tooltipEl)
+      this.tooltipEl.style.display = 'none';
   };
 
   /**
@@ -643,7 +649,7 @@
       this.frame = SmoothieChart.AnimateCompatibility.requestAnimationFrame(function() {
         if(this.options.nonRealtimeData){
            var dateZero = new Date(0);
-           // find the data point with the latest timestamp          
+           // find the data point with the latest timestamp
            var maxTimeStamp = this.seriesSet.reduce(function(max, series){
              var dataSet = series.timeSeries.data;
              var indexToCheck = Math.round(this.options.displayDataFromPercentile * dataSet.length) - 1;
@@ -693,7 +699,7 @@
       if (timeSeries.disabled) {
           continue;
       }
-      
+
       if (!isNaN(timeSeries.maxValue)) {
         chartMaxValue = !isNaN(chartMaxValue) ? Math.max(chartMaxValue, timeSeries.maxValue) : timeSeries.maxValue;
       }
@@ -890,7 +896,7 @@
       if (timeSeries.disabled) {
           continue;
       }
-      
+
       var dataSet = timeSeries.data,
           seriesOptions = this.seriesSet[d].options,
           interpolation = chartOptions.interpolation;
@@ -1002,8 +1008,8 @@
     }
 
     // Display intermediate y axis labels along y-axis to the left of the chart
-    if ( chartOptions.labels.showIntermediateLabels 
-          && !isNaN(this.valueRange.min) && !isNaN(this.valueRange.max) 
+    if ( chartOptions.labels.showIntermediateLabels
+          && !isNaN(this.valueRange.min) && !isNaN(this.valueRange.max)
           && chartOptions.grid.verticalSections > 0) {
       // show a label above every vertical section divider
       var step = (this.valueRange.max - this.valueRange.min) / chartOptions.grid.verticalSections;
@@ -1015,11 +1021,11 @@
         }
         var yValue = chartOptions.yIntermediateFormatter(this.valueRange.min + (v * step), chartOptions.labels.precision);
         //left of right axis?
-        intermediateLabelPos = 
+        intermediateLabelPos =
           chartOptions.labels.intermediateLabelSameAxis
-          ? (chartOptions.scrollBackwards ? 0 : dimensions.width - context.measureText(yValue).width - 2) 
+          ? (chartOptions.scrollBackwards ? 0 : dimensions.width - context.measureText(yValue).width - 2)
           : (chartOptions.scrollBackwards ? dimensions.width - context.measureText(yValue).width - 2 : 0);
-         
+
         context.fillText(yValue, intermediateLabelPos, gy - chartOptions.grid.lineWidth);
       }
     }
